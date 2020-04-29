@@ -1,35 +1,24 @@
 class Spree::Slide < ActiveRecord::Base
-
   has_and_belongs_to_many :slide_locations,
                           class_name: 'Spree::SlideLocation',
                           join_table: 'spree_slide_slide_locations'
 
-  # has_attached_file :image,
-  #                   url: '/spree/slides/:id/:style/:basename.:extension',
-  #                   path: ':rails_root/public/spree/slides/:id/:style/:basename.:extension',
-  #                   convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
-  # validates_attachment :image, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
-
+  belongs_to :product, touch: true, optional: true
 
   has_one_attached :image
-  validate :check_attachment_content_type
 
-  def accepted_image_types
-    %w(image/jpeg image/jpg image/png image/gif)
-  end
-
-  def check_attachment_content_type
-    if image.attached? && !image.content_type.in?(accepted_image_types)
-      errors.add(:image, :not_allowed_content_type)
-    end
-  end
-
-
+  validates :name, :link_url, :image, presence: true, unless: -> { product }
+  validates :image, content_type: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']
 
   scope :published, -> { where(published: true).order('position ASC') }
-  scope :location, -> (location) { joins(:slide_locations).where('spree_slide_locations.name = ?', location) }
+  scope :location, ->(location) { joins(:slide_locations).where('spree_slide_locations.name = ?', location) }
+  scope :product_slides, -> { published.where.not(product_id: nil).order('position ASC') }
+  scope :image_slides, -> { published.where(product_id: nil).order('position ASC') }
 
-  belongs_to :product, touch: true, required: false
+  STYLES = {
+    preview: [120, 120],
+    thumbnail: [240, 240]
+  }.freeze
 
   def initialize(attrs = nil)
     attrs ||= { published: true }
@@ -45,7 +34,22 @@ class Spree::Slide < ActiveRecord::Base
   end
 
   def slide_image
-    !image.attached? && product.present? && product.images.any? ? product.images.first.attachment : image
+    !image.attached? && product.present? && product.images.any? ? product.images.first.attachment : image.attachment
+  end
+
+  # Helper for resizing
+  def preview
+    image_variant(:preview)
+  end
+
+  def thumbnail
+    image_variant(:thumbnail)
+  end
+
+  private
+
+  def image_variant(variant)
+    slide_image.variant(resize_to_limit: STYLES[variant])
   end
 
 end

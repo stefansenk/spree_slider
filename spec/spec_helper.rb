@@ -1,7 +1,9 @@
 # Run Coverage report
 require 'simplecov'
+
 SimpleCov.start do
   add_filter 'spec/dummy'
+  add_filter 'spec/support'
   add_group 'Controllers', 'app/controllers'
   add_group 'Helpers', 'app/helpers'
   add_group 'Mailers', 'app/mailers'
@@ -13,10 +15,13 @@ end
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
 
-require File.expand_path('../dummy/config/environment.rb', __FILE__)
+require File.expand_path('dummy/config/environment.rb', __dir__)
 
 require 'rspec/rails'
+require 'rspec/mocks'
 require 'ffaker'
+require 'pry'
+require 'active_storage_validations'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -29,6 +34,9 @@ require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 
+# Requires factories defined in lib/spree_slider/factories.rb
+require 'spree_slider/factories'
+
 RSpec.configure do |config|
   # Infer an example group's spec type from the file location.
   config.infer_spec_type_from_file_location!
@@ -40,12 +48,6 @@ RSpec.configure do |config|
   # visit spree.admin_path
   # current_path.should eql(spree.products_path)
   config.include Spree::TestingSupport::UrlHelpers
-
-  # == Requests support
-  #
-  # Adds convenient methods to request Spree's controllers
-  # spree_get :index
-  config.include Spree::TestingSupport::ControllerRequests, type: :controller
 
   # == Mock Framework
   #

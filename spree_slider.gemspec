@@ -1,36 +1,30 @@
-# encoding: UTF-8
-lib = File.expand_path('../lib/', __FILE__)
-$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
-
-require 'spree_slider/version'
-
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_slider'
-  s.version     = SpreeSlider.version
+  s.version     = '4.0.0'
   s.summary     = 'Spree Slider extension'
   s.description = 'Adds a slider to the homepage'
-  s.required_ruby_version = '>= 2.3.3'
+  s.required_ruby_version = '>= 2.5.0'
 
-  s.author    = 'You'
-  s.email     = 'you@example.com'
-  s.homepage  = 'https://github.com/your-github-handle/spree_slider'
-  s.license = 'BSD-3-Clause'
+  s.author            = 'Giuseppe Privitera'
+  s.email             = 'priviterag@gmail.com'
+  s.homepage          = 'https://github.com/spree-contrib/spree_slider'
 
   # s.files       = `git ls-files`.split("\n").reject { |f| f.match(/^spec/) && !f.match(/^spec\/fixtures/) }
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  spree_version = '>= 3.2.0', '< 4.0'
-  s.add_dependency 'spree_core', spree_version
+  spree_version = '>= 4.0', '< 5.0'
+  s.add_dependency 'active_storage_validations', '~> 0.8.4'
   s.add_dependency 'spree_backend', spree_version
+  s.add_dependency 'spree_core', spree_version
   s.add_dependency 'spree_extension'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'awesome_print'
+  s.add_development_dependency 'byebug'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'capybara-screenshot'
-  s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'coffee-rails'
   s.add_development_dependency 'database_cleaner'
   s.add_development_dependency 'factory_bot', '~> 4.7'
@@ -38,9 +32,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mysql2'
   s.add_development_dependency 'pg'
   s.add_development_dependency 'pry'
-  s.add_development_dependency 'rspec-rails'
+  s.add_development_dependency 'rspec-mocks'
+  s.add_development_dependency 'rspec-rails', '~> 4.0.0.beta2'
   s.add_development_dependency 'sass-rails'
-  s.add_development_dependency 'selenium-webdriver'
   s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'sqlite3', '~> 1.3.6'
+  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'webdrivers', '~> 4.0.0'
 end
