@@ -2,12 +2,13 @@
 
   <%# generate a random number for the carousel id - in case you want multiple per page %>
   <% cid ||= Random.rand(1000) %>
+  <% cid_dom_id = "carousel-slider-#{cid}" %>
 
-  <div id="carousel-slider-<%= cid %>" class="carousel slide" data-ride="carousel" <%= (defined? interval) != nil ? "data-interval=#{interval.to_s}" : "" %>>
+  <div id="<%= cid_dom_id %>" class="carousel slide" data-ride="carousel" <%= (defined? interval) != nil ? "data-interval=#{interval.to_s}" : "" %>>
     <%# Indicators %>
     <ol class="carousel-indicators">
       <% slider.each_with_index do |slide, index| %>
-        <li data-target="#carousel-prod-<%= cid %>" data-slide-to="<%= index %>" class="<%= index == 0 ? 'active' : '' %>"></li>
+        <li data-target="#<%= cid_dom_id %>" data-slide-to="<%= index %>" class="<%= index == 0 ? 'active' : '' %>"></li>
       <% end %>
     </ol>
 
@@ -29,11 +30,11 @@
         </div>
 
         <%# Controls %>
-        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <a class="carousel-control-prev" href="#<%= cid_dom_id %>" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="sr-only"><%= t(:previous) %></span>
         </a>
-        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <a class="carousel-control-next" href="#<%= cid_dom_id %>" role="button" data-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="sr-only"><%= t(:next) %></span>
         </a>
