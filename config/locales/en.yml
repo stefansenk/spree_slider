@@ -14,7 +14,7 @@ en:
 
   activerecord:
     models:
-      spree/slide: 'Slide'
+      spree/slide: 'Slides'
 
   spree_slider:
     config_name: 'Spree Slider'
