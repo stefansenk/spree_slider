@@ -7,7 +7,8 @@ class Spree::Slide < ActiveRecord::Base
 
   has_one_attached :image
 
-  validates :name, :link_url, :image, presence: true, unless: -> { product }
+  validates :link_url, presence: true, url: true, unless: -> { product }
+  validates :name, :image, presence: true, unless: -> { product }
   validates :image, content_type: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']
 
   scope :published, -> { where(published: true).order('position ASC') }
@@ -39,17 +40,17 @@ class Spree::Slide < ActiveRecord::Base
 
   # Helper for resizing
   def preview
-    image_variant(:preview)
+    image_form(:preview)
   end
 
   def thumbnail
-    image_variant(:thumbnail)
+    image_form(:thumbnail)
   end
 
   private
 
-  def image_variant(variant)
-    slide_image.variant(resize_to_limit: STYLES[variant])
+  def image_form(form)
+    slide_image.variant(resize_to_limit: STYLES[form])
   end
 
 end
